@@ -37,6 +37,11 @@ jobs:
     steps:
       - say_hello:
           to: "Hello Mostafa"
+      - run: exit 1
+      - run:
+          name: on error
+          command: "hello error"
+          when: on_fail
 
 workflows:
   output_file:
