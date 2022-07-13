@@ -32,8 +32,6 @@ jobs:
       - checkout
       - run: npm audit
 
-
-
 workflows:
   my_workflow:
     jobs:
