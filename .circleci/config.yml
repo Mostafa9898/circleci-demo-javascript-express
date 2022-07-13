@@ -4,56 +4,46 @@ defaults: &defaults
   docker:
     - image: circleci/node:13.8.0
 
-commands:
-  say_hello:
-    description: "prints Hello to the console"
-    parameters:
-      to:
-        type: string
-        default: "Hello World"
-    steps:
-      - run: echo << parameters.to >> 
-
-
 jobs:
-  save_hello_world_output:
+  build:
     <<: *defaults
     steps:
-      - run: echo "Hello world!" > ~/output.txt
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - output.txt
+      - checkout
+      - run: npm i
+      - save_cache:
+          key: "npm-packages"
+          paths: 
+            - /src/node_modules
+      - run: npm run lint
 
-  print_output_file:
+  test:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/
-      - run: cat ~/output.txt
+      - checkout
+      - restore_cache:
+          keys: 
+            - "npm-packages"
+      - run: npm i
+      - run: npm run test
 
-  test_command:
+  analyze:
     <<: *defaults
     steps:
-      - say_hello:
-          to: "Hello Mostafa"
-      - run: exit 1
-      - run:
-          name: on error
-          command: "hello error"
-          when: on_fail
+      - checkout
+      - restore_cache:
+          keys: 
+            - "node-package"
+      - run: audit
+
+
 
 workflows:
-  output_file:
+  build:
     jobs:
-      - save_hello_world_output
-      - print_output_file:
-          requires: 
-            - save_hello_world_output
-
-  test_command:
-    jobs:
-      - test_command
-
-  
-
+      - build
+      - test:
+          requires:
+            - "build"
+      - analyze:
+          requires:
+            - "test"
