@@ -33,7 +33,7 @@ jobs:
       - restore_cache:
           keys: 
             - "node-package"
-      - run: audit
+      - run: npm audit
 
 
 
