@@ -1,9 +1,23 @@
 version: 2.1
 
+defaults: &defaults
+  docker:
+    - image: circleci/node:13.8.0
+
+commands:
+  say_hello:
+    description: "prints Hello to the console"
+    parameters:
+      to:
+        type: string
+        default: "Hello World"
+    steps:
+      - run: echo << parameters.to >> 
+
+
 jobs:
   save_hello_world_output:
-    docker:
-      - image: circleci/node:13.8.0
+    <<: *defaults
     steps:
       - run: echo "Hello world!" > ~/output.txt
       - persist_to_workspace:
@@ -12,12 +26,17 @@ jobs:
             - output.txt
 
   print_output_file:
-    docker:
-      - image: circleci/node:13.8.0
+    <<: *defaults
     steps:
       - attach_workspace:
           at: ~/
       - run: cat ~/output.txt
+
+  test_command:
+    <<: *defaults
+    steps:
+      - say_hello:
+          to: "Hello Mostafa"
 
 workflows:
   output_file:
@@ -26,6 +45,10 @@ workflows:
       - print_output_file:
           requires: 
             - save_hello_world_output
+
+  test_command:
+    jobs:
+      - test_command
 
   
 
