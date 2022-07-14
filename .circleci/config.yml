@@ -1,10 +1,4 @@
 version: 2.1
-
-defaults: &defaults
-  docker:
-    - image: circleci/node:13.8.0
-
-version: 2.1
 # Use a package of configuration called an orb.
 orbs:
   # Choose either one of the orbs below
