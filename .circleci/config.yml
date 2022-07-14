@@ -28,6 +28,10 @@ jobs:
       - add_ssh_keys:
           # You can get this ID in the section where you registered the SSH Key
           fingerprints: ["41:0a:b2:e3:29:d7:8a:6b:36:be:69:b4:52:59:57:3d"]
+      - run: 
+          name: print aws configurations
+          command: |
+            aws configure list
       - run:
           name: Install Ansible
           command: |
@@ -37,10 +41,10 @@ jobs:
           command: |
             ansible-playbook -i inventory main-remote.yml
 
-workflows:
-  myWorkflow:
+myWorkflow:
     jobs:
       - create_infrastructure
       - configure_infrastructure:
           requires:
-            - create_infrastructure
+            - create_infrastructureworkflows
+  
