@@ -41,7 +41,7 @@ jobs:
           command: |
             ansible-playbook -i inventory main-remote.yml
 
-myWorkflow:
+workflows:
     jobs:
       - create_infrastructure
       - configure_infrastructure:
