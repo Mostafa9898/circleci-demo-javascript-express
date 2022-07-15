@@ -37,7 +37,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          dat: ~/
+          at: ~/
       - add_ssh_keys:
           # You can get this ID in the section where you registered the SSH Key
           fingerprints: ["41:0a:b2:e3:29:d7:8a:6b:36:be:69:b4:52:59:57:3d"]
