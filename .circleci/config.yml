@@ -23,14 +23,16 @@ jobs:
       - run:
           name: Install tar utility
           command: |
-            yum install -y tar gzip      
+            yum install -y tar gzip     
+      - run:
+          command: echo [all] >> /root/project/inventory.txt
       - run:
           name: store instance ip
           command: |
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:name,Values=ansible" \
-              --output text >> inventory.txt
+              --output text >> /root/project/inventory.txt
       - persist_to_workspace:
           root: /root/project/
           paths:
