@@ -10,7 +10,6 @@ jobs:
   create_infrastructure:
     docker:
       - image: amazon/aws-cli
-      - image: python:3.11-rc-alpine
     steps:
       - checkout
       - run:
