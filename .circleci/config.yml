@@ -78,6 +78,9 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
+      - run:
+          name: Install tar utility
+          command: yum install -y tar gzip
       - attach_workspace:
           at: /root/project/
       - run: apk add --update curl
