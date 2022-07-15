@@ -76,7 +76,7 @@ jobs:
   # Exercise: Smoke Testing
   smoke_test:
     docker:
-      - image: alpine:latest
+      - image: amazon/aws-cli
     steps:
       - attach_workspace:
           at: /root/project/
