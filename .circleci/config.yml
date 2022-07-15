@@ -21,9 +21,9 @@ jobs:
               --region us-east-1
       - run:
           name: Install tar utility
-          command: yum install -y tar gzip  
-      - run: 
-          command: '> /root/project/inventory.txt'
+          command: yum install -y tar gzip
+      - run:
+          command: "> /root/project/inventory.txt"
       - run:
           command: echo [all] >> /root/project/inventory.txt
       - run:
@@ -36,7 +36,7 @@ jobs:
       - persist_to_workspace:
           root: /root/project/
           paths:
-            - inventory.txt        
+            - inventory.txt
 
   configure_infrastructure:
     docker:
@@ -59,11 +59,31 @@ jobs:
           command: |
             ansible-playbook -i inventory.txt main-remote.yml
 
-workflows:
-    my_workflow:
-      jobs:
-        - create_infrastructure
-        - configure_infrastructure:
-            requires:
-              - create_infrastructure
+  # Exercise: Smoke Testing
+  smoke_test:
+    docker:
+      - image: alpine:latest
+    steps:
+      - attach_workspace:
+          at: /root/project/
+      - run: apk add --update curl
+      - run:
+          name: smoke test
+          command: |
 
+            IP=`sed -n '2{p;q}' /root/project/inventory.txt`
+            # Test if website exists
+            if curl -s --head "http://${IP}:3000" 
+            then
+              return 0
+            else
+              return 1
+            fi
+
+workflows:
+  my_workflow:
+    jobs:
+      - create_infrastructure
+      - configure_infrastructure:
+          requires:
+            - create_infrastructure
