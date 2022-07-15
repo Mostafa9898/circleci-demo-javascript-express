@@ -76,7 +76,7 @@ jobs:
   # Exercise: Smoke Testing
   smoke_test:
     docker:
-      - image: amazon/aws-cli
+      - image: python:3.7-alpine3.11
     steps:
       - run:
           name: Install tar utility
