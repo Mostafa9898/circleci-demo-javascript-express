@@ -73,7 +73,7 @@ jobs:
 
             IP=`sed -n '2{p;q}' /root/project/inventory.txt`
             # Test if website exists
-            if curl -s --head "http://${IP}:3000" 
+            if curl -s --head "http://${IP}:4000" 
             then
               return 0
             else
