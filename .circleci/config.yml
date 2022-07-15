@@ -49,6 +49,8 @@ jobs:
       - attach_workspace:
           at: /root/project/
       - run:
+          command: cat inventory.txt
+      - run:
           name: Install Ansible
           command: |
             apk add --update ansible
