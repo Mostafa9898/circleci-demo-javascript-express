@@ -21,6 +21,10 @@ jobs:
               --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
               --region us-east-1
       - run:
+          name: Install tar utility
+          command: |
+            yum install -y tar gzip      
+      - run:
           name: store instance ip
           command: |
             aws ec2 describe-instances \
@@ -41,7 +45,7 @@ jobs:
           # You can get this ID in the section where you registered the SSH Key
           fingerprints: ["41:0a:b2:e3:29:d7:8a:6b:36:be:69:b4:52:59:57:3d"]
       - attach_workspace:
-                at: /root/project/
+          at: /root/project/
       - run:
           name: Install Ansible
           command: |
