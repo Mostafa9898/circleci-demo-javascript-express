@@ -1,9 +1,23 @@
 version: 2.1
+
 # Use a package of configuration called an orb.
 orbs:
   # Choose either one of the orbs below
   # welcome: circleci/welcome-orb@0.4.1
   aws-cli: circleci/aws-cli@2.0.3
+
+commands:
+  # Exercise - Rollback
+  destroy_environment:
+    steps:
+      - run:
+          name: Destroy environment
+          # ${CIRCLE_WORKFLOW_ID} is a Built-in environment variable
+          # ${CIRCLE_WORKFLOW_ID:0:5} takes the first 5 chars of the variable CIRCLE_CI_WORKFLOW_ID
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5}
+
 # Define the jobs we want to run for this project
 jobs:
   # Exercise: Config and Deployment
@@ -73,12 +87,13 @@ jobs:
 
             IP=`sed -n '2{p;q}' /root/project/inventory.txt`
             # Test if website exists
-            if curl -s --head "http://${IP}:3000" 
+            if curl -s --head "http://${IP}:4000" 
             then
               return 0
             else
               return 1
             fi
+      - destroy_environment
 
 workflows:
   my_workflow:
