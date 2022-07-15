@@ -10,6 +10,7 @@ jobs:
   create_infrastructure:
     docker:
       - image: amazon/aws-cli
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       - run:
@@ -26,6 +27,10 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:name,Values=ansible" \
               --output text >> inventory.txt
+      - persist_to_workspace:
+          root: /root/project/
+          paths:
+            - inventory.txt        
 
   configure_infrastructure:
     docker:
@@ -35,6 +40,8 @@ jobs:
       - add_ssh_keys:
           # You can get this ID in the section where you registered the SSH Key
           fingerprints: ["41:0a:b2:e3:29:d7:8a:6b:36:be:69:b4:52:59:57:3d"]
+      - attach_workspace:
+                at: /root/project/
       - run:
           name: Install Ansible
           command: |
