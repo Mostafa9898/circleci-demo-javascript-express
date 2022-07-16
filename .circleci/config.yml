@@ -36,14 +36,6 @@ jobs:
               --parameter-overrides MyBucketName="mybucket-${CIRCLE_WORKFLOW_ID:0:7}"
       # Uncomment the step below if yoou wish to upload all contents of the current directory to the S3 bucket
       - run: aws s3 sync . s3://mybucket-${CIRCLE_WORKFLOW_ID:0:7} --delete
-      - run:
-          name: Excute cloud front
-          command: |
-            aws cloudformation deploy \
-             --template-file cloudfront.yml \
-             --stack-name production-distro \
-             --parameter-overrides PipelineID="${CIRCLE_WORKFLOW_ID:0:7}" \
-             --tags project=udapeople &
 
   # Fetch and save the pipeline ID (bucket ID) responsible for the last release.
   get_last_deployment_id:
@@ -90,6 +82,13 @@ jobs:
       - run: yum install -y tar gzip
       - attach_workspace:
           at: ~/
+      - run:
+          name: stop this job if textfile is empty
+          command: |
+            if test -z `cat ~/textfile.txt`
+            then
+              circleci-agent step halt
+            fi
       - run:
           name: Destroy the previous S3 bucket and CloudFormation stack.
           # Use $OldBucketID environment variable or mybucket644752792305 below.
