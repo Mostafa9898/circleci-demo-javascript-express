@@ -60,7 +60,7 @@ jobs:
             --no-paginate --output text > ~/textfile.txt
       - run:
           name: show result for debuging
-          command: cat textfile.txt
+          command: cat ~/textfile.txt
       - persist_to_workspace:
           root: ~/
           paths:
