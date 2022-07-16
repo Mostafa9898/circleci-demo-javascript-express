@@ -78,7 +78,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file cloudfront.yml \
-              --stack-name production-distro \
+              --stack-name cloud-front \
               --parameter-overrides PipelineID="mybucket-${CIRCLE_WORKFLOW_ID:0:7}"
 
   # Destroy the previous production version's S3 bucket and CloudFormation stack.
@@ -97,6 +97,7 @@ jobs:
           command: |
             export OldBucketID=$(cat ~/textfile.txt)
             aws s3 rm "s3://${OldBucketID}" --recursive
+            aws cloudformation delete-stack --stack-name "stack-create-bucket-${OldBucketID}"
 
   # Exercise: Config and Deployment
   create_infrastructure:
@@ -109,7 +110,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file IFC.yml \
-              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7} \
+              --stack-name backend-infra-${CIRCLE_WORKFLOW_ID:0:7} \
               --region us-east-1
       - run:
           name: Install tar utility
